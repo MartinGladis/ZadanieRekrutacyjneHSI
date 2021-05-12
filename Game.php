@@ -24,7 +24,15 @@ class Game {
             return;
         }
 
+        $this->addPoints($pins);
+        $this->setStrikesAndSpares();
+        $this->nextRoll();
+    }
 
+    
+
+
+    private function addPoints($pins) {
         $this->pinsLeft -= $pins;
         $this->score += $pins;
 
@@ -44,23 +52,18 @@ class Game {
                 $this->doubleStrike = false;
             }
         }
-
-        $this->setStrikesAndSpares();
-        $this->nextRoll();
     }
 
-    public function getScore() {
-        return $this->score;
-    }
+    private function setStrikesAndSpares() {
+        if ($this->strike && $this->pinsLeft == 0 && $this->frame != 10)
+            $this->doubleStrike = true;
 
-    public function isTheGameStillOpen() {
-        return $this->gameOpen;
-    }
+        if ($this->chance == 1 && $this->pinsLeft == 0 && $this->frame != 10)
+            $this->strike = true;
 
-    public function viewFrameAndChance() {
-        echo "\nFrames: " . $this->frame . "\nChance: " . $this->chance . "\n";
+        if ($this->chance == 2 && $this->pinsLeft == 0 && $this->frame != 10)
+            $this->spare = true;
     }
-
 
     private function nextRoll() {
         if (($this->frame == 10) && $this->pinsLeft == 0 ) {
@@ -87,14 +90,17 @@ class Game {
         }
     }
 
-    private function setStrikesAndSpares() {
-        if ($this->strike && $this->pinsLeft == 0 && $this->frame != 10)
-            $this->doubleStrike = true;
 
-        if ($this->chance == 1 && $this->pinsLeft == 0 && $this->frame != 10)
-            $this->strike = true;
+    
+    public function getScore() {
+        return $this->score;
+    }
 
-        if ($this->chance == 2 && $this->pinsLeft == 0 && $this->frame != 10)
-            $this->spare = true;
+    public function isTheGameStillOpen() {
+        return $this->gameOpen;
+    }
+
+    public function viewFrameAndChance() {
+        echo "\nFrames: " . $this->frame . "\nChance: " . $this->chance . "\n";
     }
 }
